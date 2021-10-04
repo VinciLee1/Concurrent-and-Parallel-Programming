@@ -1,2 +1,4 @@
-package PACKAGE_NAME;public interface SyncLock {
+public interface SyncLock {
+
+    public void service() throws InterruptedException;
 }
