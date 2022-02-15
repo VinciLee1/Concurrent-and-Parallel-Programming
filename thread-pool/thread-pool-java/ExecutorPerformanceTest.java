@@ -15,11 +15,9 @@ public class ExecutorPerformanceTest {
         ExecutorService executorService;
         Tasks tasks = new Tasks(taskSize, (long)latency);
 
-        for (int i = 1; i <= parallelismMax; i++) {
-            executorService = get(executorType, i);
-            tasks.execute(executorService);
-            executorService.shutdown();
-        }
+        executorService = get(executorType, parallelismMax);
+        tasks.execute(executorService);
+        executorService.shutdown();
         
         System.exit(0);
     }
@@ -61,10 +59,14 @@ public class ExecutorPerformanceTest {
         }
 
         public void execute(ExecutorService executorService) throws Exception {
-            long start = System.nanoTime();
-            executorService.invokeAll(subTasks);
-            long end = System.nanoTime();
-            System.out.println((end - start) / 1000000);
+            long cost = 0;
+            for (int i = 0; i < 10; i++) {
+                long start = System.nanoTime();
+                executorService.invokeAll(subTasks);
+                long end = System.nanoTime();
+                cost += end - start;
+            }
+            System.out.println((double) cost / 10000000.0);
         }
     }
 
